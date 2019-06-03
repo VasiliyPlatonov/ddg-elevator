@@ -1,5 +1,7 @@
 # The test work for DDG
-This is a simple java web application that uses spring boot, websocket and vue.js
+**At this branch is alteration project**
+
+This is a simple java web application uses spring mvc and vue.js  
 
 
 ### For run the application just clone or download it and use:
