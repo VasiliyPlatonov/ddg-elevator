@@ -8,25 +8,24 @@
                             class="floor__btn">{{index + 1}}
                     </button>
                 </div>
-                <div v-bind:class="['elevator', currentFloorClass]"></div>
             </div>
         </div>
 
         <div class="col">
             <div class="elevator-actions">
-                <button @click="onStop">stop</button>
+                <button @click="onState">state</button>
             </div>
-
             <div class="card">
                 <div>
-                    <h3 class="card__header">Task list</h3>
+                    <h3 class="card__header">Current state</h3>
+                    <p>{{ elevatorState }}</p>
                 </div>
-                <ul>
-                    <li v-if="isStopped">STOPPED</li>
-                    <li v-else
-                        v-for="task in taskList">{{task}}
-                    </li>
-                </ul>
+            </div>
+            <div class="card">
+                <div>
+                    <h3 class="card__header">Error</h3>
+                    <p>{{ elevatorError }}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -44,29 +43,16 @@
             moveToFloor(floor) {
                 this.$store.dispatch('moveToFloor', floor)
             },
-            onStop() {
-                this.$store.dispatch('stop')
-            },
             onState() {
-                console.log('elevator state')
+                this.$store.dispatch('fetchToState')
             }
-        }
-        ,
+        },
         computed: {
-            currentFloor() {
-                return this.$store.getters.getCurrentFloor
-            }
-            ,
-            taskList() {
-                return this.$store.getters.getTaskList
-            }
-            ,
-            isStopped() {
-                return this.$store.getters.isStopped
-            }
-            ,
-            currentFloorClass() {
-                return 'current-floor--' + this.currentFloor
+            elevatorState() {
+                return this.$store.getters.getElevatorState
+            },
+            elevatorError() {
+                return this.$store.getters.getElevatorError
             }
         }
 
@@ -121,18 +107,6 @@
         box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
 
-    .elevator {
-        position: absolute;
-        bottom: 5px;
-        right: -60px;
-        width: 40px;
-        height: 60px;
-        background-image: url("../assets/elevator-icon.png");
-        background-size: cover;
-        transition-duration: 1s;
-        transition-timing-function: ease-in-out;
-    }
-
     .elevator-actions {
         max-width: 18rem;
     }
@@ -155,7 +129,7 @@
     }
 
     .card {
-        width: 18rem;
+        width: 15rem;
         min-width: 0;
         background-color: #f8f9fa;
         display: flex;
@@ -171,6 +145,9 @@
             padding: 5px 15px;
             list-style-type: none;
             font-size: 1em;
+        }
+        p {
+            padding: 10px;
         }
     }
 

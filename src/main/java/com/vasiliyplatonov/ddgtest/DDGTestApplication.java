@@ -1,6 +1,7 @@
 package com.vasiliyplatonov.ddgtest;
 
 import com.vasiliyplatonov.ddgtest.domain.Elevator;
+import com.vasiliyplatonov.ddgtest.domain.ElevatorImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class DDGTestApplication implements WebMvcConfigurer {
     @Bean
     public Elevator elevator() {
-        return new Elevator();
+        return new ElevatorImpl(1,7);
     }
 
     @Override

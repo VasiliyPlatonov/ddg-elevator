@@ -4,13 +4,13 @@ module.exports = {
     // to our Spring Boot backend (localhost:8088) using http-proxy-middleware
     // see https://cli.vuejs.org/config/#devserver-proxy
     devServer: {
-        // proxy: {
-        //   '/banner': {
-        //     target: 'http://localhost:8088',
-        //     ws: true,
-        //     changeOrigin: true
-        //   }
-        // }
+        proxy: {
+          '/elevator': {
+            target: 'http://localhost:8080',
+            ws: true,
+            changeOrigin: true
+          }
+        }
 
     },
     // Change build paths to make them Maven compatible

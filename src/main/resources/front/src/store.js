@@ -1,45 +1,60 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as api from './wsock'
+import axios from 'axios'
 
 Vue.use(Vuex)
 
 
 const elevator = {
     state: {
-        stopped: false,
-        currentFloor: 1,
-        tasks: ['no task'],
+        elevatorState: '',
+        elevatorError: ''
     },
     getters: {
-        getCurrentFloor(state) {
-            return state.currentFloor
+        getElevatorState(state) {
+            return state.elevatorState
         },
-        getTaskList(state) {
-            return state.tasks
-        },
-        isStopped(state) {
-            return state.stopped
+        getElevatorError(state){
+            return state.elevatorError
         }
     },
     mutations: {
-        setElevator(state, elevator) {
-            state.currentFloor = elevator.currentFloor;
-            state.stopped = elevator.stopped;
-            state.tasks = elevator.taskList.length > 0 ? elevator.taskList.map(e => e.description) : ['no tasks'];
-
+        setElevatorState(state, elevatorState) {
+            state.elevatorState = elevatorState;
+        },
+        setError(state, msg) {
+            state.elevatorError = msg
         }
+
     },
     actions: {
         moveToFloor({commit}, floor) {
-            api.moveToFloor(floor)
+            axios.post('/elevator/' + floor)
+                .then(response => {
+                    if (response.data.length > 0)
+                        commit('setError', response.data)
+                    else  commit('setError', '')
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         },
         setElevator({commit}, elevator) {
             commit('setElevator', elevator)
         },
-        stop() {
-            api.stopElevator()
+        fetchToState({commit}) {
+            axios.get('/elevator/state')
+                .then(response => {
+                    const elevatorState = response.data
+                    console.log(response)
+                    commit('setElevatorState', elevatorState)
+                    commit('setError', '')
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         }
+
     }
 }
 
